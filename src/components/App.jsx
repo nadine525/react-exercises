@@ -2,6 +2,8 @@ import React, {Component} from "react";
 // import Counter from './Counter';
 // import Dropdown from './Dropdown';
 // import ColorPicker from "./ColorPicker";
+
+import initialTodos from './todos.json';
 import TodoList from './TodoList';
 
 
@@ -18,23 +20,31 @@ import TodoList from './TodoList';
 
 class App extends Component {
   state = {
-    todos: [
-        { "id": "id-1", "text": "Вивчити основи React", "completed": false },
-        { "id": "id-2", "text": "Розібратися з React Router", "completed": false },
-        { "id": "id-3", "text": "Пережити Redux", "completed": false }
-    ],
+    todos: initialTodos,
+  };
+
+  deleteTodo = todoId => {
+    this.setState(prevState => ({ todos: prevState.todos.filter(todo => todo.id !== todoId) }));
   };
 
 
   render() {
     const { todos } = this.state;
+
+    const totalTodoCount = todos.length;
+    const completedTodosCount = todos.reduce((total, todo) => todo.completed ? total + 1 : total)
     return (
     
         <>
       {/* <Counter initialValue={10} /> */}
       {/* <Dropdown /> */}
       {/* <ColorPicker options={colorPickerOptions} /> */}
-        <TodoList todos={todos} />
+
+        <div> 
+          <p>Загальна кількість: {totalTodoCount}</p>
+          <p>Кількість виконаних: {completedTodosCount}</p>
+        </div>
+        <TodoList todos={todos} onDeleteTodo={ this.deleteTodo} />
     </>
     )
   }
