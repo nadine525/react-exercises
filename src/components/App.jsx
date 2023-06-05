@@ -18,7 +18,11 @@ import TodoList from './TodoList';
 
 class App extends Component {
   state = {
-    todos: [],
+    todos: [
+        { "id": "id-1", "text": "Вивчити основи React", "completed": false },
+        { "id": "id-2", "text": "Розібратися з React Router", "completed": false },
+        { "id": "id-3", "text": "Пережити Redux", "completed": false }
+    ],
   };
 
 
