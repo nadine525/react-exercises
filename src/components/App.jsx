@@ -7,6 +7,7 @@ import { nanoid } from 'nanoid';
 import initialTodos from './todos.json';
 import TodoList from './TodoList';
 import TodoEditor from './TodoEditor';
+import Filter from './Filter';
 
 // import Form from "./Form";
 
@@ -25,6 +26,7 @@ import TodoEditor from './TodoEditor';
 class App extends Component {
   state = {
     todos: initialTodos,
+    filter: '',
   };
 
   addTodo = text => {
@@ -66,17 +68,32 @@ class App extends Component {
     }));
   };
 
-
   formSubmitHandler = (data) => {
     console.log(data);
   }
 
+  changeFilter = e => {
+    this.setState({ filter: e.currentTarget.value });
+  };
+
+  getVisibleTodos = () => {
+    const { filter, todos } = this.state;
+    const normalizedFilter = filter.toLowerCase();
+    
+
+    return todos.filter(todo =>
+      todo.text.toLowerCase().includes(normalizedFilter),
+    );
+  };
+
   render() {
-    const { todos } = this.state;
+    const { todos, filter } = this.state;
 
     const totalTodoCount = todos.length;
     const completedTodosCount = todos.reduce((total, todo) => (todo.completed ? total + 1 : total), 0,);
 
+    const visibleTodos = this.getVisibleTodos();
+    
     return (
     
       <>
@@ -90,7 +107,10 @@ class App extends Component {
         </div>
 
         <TodoEditor onSubmit={this.addTodo} />
-        <TodoList todos={todos} onDeleteTodo={this.deleteTodo} onToggleCompleted={this.toggleCompleted}/>
+
+        <Filter value={filter} onChange={this.changeFilter} />
+
+        <TodoList todos={visibleTodos} onDeleteTodo={this.deleteTodo} onToggleCompleted={this.toggleCompleted}/>
         
         {/* <Form onSubmit={this.formSubmitHandler} /> */}
     </>
