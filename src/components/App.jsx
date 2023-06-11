@@ -3,10 +3,12 @@ import React, {Component} from "react";
 // import Dropdown from './Dropdown';
 // import ColorPicker from "./ColorPicker";
 
-// import initialTodos from './todos.json';
-// import TodoList from './TodoList';
+import { nanoid } from 'nanoid';
+import initialTodos from './todos.json';
+import TodoList from './TodoList';
+import TodoEditor from './TodoEditor';
 
-import Form from "./Form";
+// import Form from "./Form";
 
 
 
@@ -21,13 +23,48 @@ import Form from "./Form";
 
 
 class App extends Component {
-  // state = {
-  //   todos: initialTodos,
-  // };
+  state = {
+    todos: initialTodos,
+  };
 
-  // deleteTodo = todoId => {
-  //   this.setState(prevState => ({ todos: prevState.todos.filter(todo => todo.id !== todoId) }));
-  // };
+  addTodo = text => {
+    console.log(text);
+
+    const todo = {
+      id: nanoid(),
+      text,
+      completed: false,
+    }
+
+        this.setState(({ todos }) => ({
+      todos: [todo, ...todos],
+    }));
+  }
+
+  deleteTodo = todoId => {
+    this.setState(prevState => ({ todos: prevState.todos.filter(todo => todo.id !== todoId) }));
+  };
+
+   toggleCompleted = todoId => {
+    // this.setState(prevState => ({
+    //   todos: prevState.todos.map(todo => {
+    //     if (todo.id === todoId) {
+    //       return {
+    //         ...todo,
+    //         completed: !todo.completed,
+    //       };
+    //     }
+
+    //     return todo;
+    //   }),
+    // }));
+
+    this.setState(({ todos }) => ({
+      todos: todos.map(todo =>
+        todo.id === todoId ? { ...todo, completed: !todo.completed } : todo,
+      ),
+    }));
+  };
 
 
   formSubmitHandler = (data) => {
@@ -35,10 +72,10 @@ class App extends Component {
   }
 
   render() {
-    // const { todos } = this.state;
+    const { todos } = this.state;
 
-    // const totalTodoCount = todos.length;
-    // const completedTodosCount = todos.reduce((total, todo) => todo.completed ? total + 1 : total)
+    const totalTodoCount = todos.length;
+    const completedTodosCount = todos.reduce((total, todo) => (todo.completed ? total + 1 : total), 0,);
 
     return (
     
@@ -47,13 +84,15 @@ class App extends Component {
       {/* <Dropdown /> */}
       {/* <ColorPicker options={colorPickerOptions} /> */}
 
-        {/* <div> 
+        <div> 
           <p>Загальна кількість: {totalTodoCount}</p>
           <p>Кількість виконаних: {completedTodosCount}</p>
         </div>
-        <TodoList todos={todos} onDeleteTodo={this.deleteTodo} /> */}
+
+        <TodoEditor onSubmit={this.addTodo} />
+        <TodoList todos={todos} onDeleteTodo={this.deleteTodo} onToggleCompleted={this.toggleCompleted}/>
         
-        <Form onSubmit={this.formSubmitHandler} />
+        {/* <Form onSubmit={this.formSubmitHandler} /> */}
     </>
     )
   }
