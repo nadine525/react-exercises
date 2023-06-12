@@ -4,7 +4,7 @@ import React, {Component} from "react";
 // import ColorPicker from "./ColorPicker";
 
 import { nanoid } from 'nanoid';
-import initialTodos from './todos.json';
+// import initialTodos from './todos.json';
 import TodoList from './TodoList';
 import TodoEditor from './TodoEditor';
 import Filter from './Filter';
